@@ -1,0 +1,261 @@
+SQL> set serveroutput on;
+SQL> 
+SQL> DROP TABLE Task CASCADE CONSTRAINT;
+
+Table dropped.
+
+SQL> DROP TABLE Language CASCADE CONSTRAINT;
+
+Table dropped.
+
+SQL> DROP TABLE Programmer CASCADE CONSTRAINT;
+
+Table dropped.
+
+SQL> DROP TABLE ProFinishedT CASCADE CONSTRAINT;
+
+Table dropped.
+
+SQL> DROP TABLE LanPro CASCADE CONSTRAINT;
+
+Table dropped.
+
+SQL> DROP TABLE FinishedTask CASCADE CONSTRAINT;
+
+Table dropped.
+
+SQL> DROP TABLE LanTask CASCADE CONSTRAINT;
+
+Table dropped.
+
+SQL> 
+SQL> create table Task(
+  2  	     name	     char(20)	     PRIMARY KEY,
+  3  	     startDate	     date	     not null,
+  4  	     targetDate      date	     not null,
+  5  	     comDate	     date	     null
+  6  );
+
+Table created.
+
+SQL> 
+SQL> create table Language(
+  2  	     name	     char(20)	     PRIMARY KEY,
+  3  	     comInter	     char(1)	     not null,
+  4  	     exaSuite	     char(20)	     null
+  5  );
+
+Table created.
+
+SQL> 
+SQL> create table Programmer(
+  2  	     ID 	     number(10)      PRIMARY KEY,
+  3  	     last	     char(20)	     not null,
+  4  	     first	     char(20)	     not null,
+  5  	     gender	     char(1)	     null,
+  6  	     salary	     number(10,2)    null    check(salary >= 0),
+  7  	     DOB	     date	     not null,
+  8  	     title	     char(20)	     null,
+  9  	     taskName	     char(20)	     null,
+ 10  	     superID	     number(10)      not null,
+ 11  	     FOREIGN KEY (taskName)	     REFERENCES Task(name),
+ 12  	     FOREIGN KEY (superID)	     REFERENCES Programmer(ID)
+ 13  );
+
+Table created.
+
+SQL> 
+SQL> create table ProFinishedT(
+  2  	     programmerID    number(10),
+  3  	     taskName	     char(20),
+  4  	     PRIMARY KEY(programmerID, taskName),
+  5  	     FOREIGN KEY (programmerID) REFERENCES Programmer(ID),
+  6  	     FOREIGN KEY (taskName) REFERENCES Task(name)
+  7  );
+
+Table created.
+
+SQL> 
+SQL> create table LanPro(
+  2  	     languageName    char(20),
+  3  	     programmerID    number(10),
+  4  	     learnedDate     date,
+  5  	     PRIMARY KEY (programmerID, languageName),
+  6  	     FOREIGN KEY (programmerID) REFERENCES Programmer(ID),
+  7  	     FOREIGN KEY (languageName) REFERENCES Language(name)
+  8  );
+
+Table created.
+
+SQL> 
+SQL> create table FinishedTask(
+  2  	     taskName	     char(20),
+  3  	     dWorked	     number(5)	     not null,
+  4  	     PRIMARY KEY (taskName),
+  5  	     FOREIGN KEY (taskName) REFERENCES Task(name)
+  6  );
+
+Table created.
+
+SQL> 
+SQL> create table LanTask(
+  2  	     languageName    char(20),
+  3  	     taskName	     char(20),
+  4  	     PRIMARY KEY (taskName, languageName),
+  5  	     FOREIGN KEY (languageName) REFERENCES Language(name),
+  6  	     FOREIGN KEY (taskName) REFERENCES Task(name)
+  7  );
+
+Table created.
+
+SQL> 
+SQL> -----------------------------------------------------------------------
+SQL> -- Populating the tables
+SQL> -----------------------------------------------------------------------
+SQL> 
+SQL> INSERT ALL
+  2  INTO Task(name, startDate, targetDate, comDate) values('taskA', TO_DATE('09/12/2015', 'DD/MM/YYYY'), TO_DATE('03/07/2019', 'DD/MM/YYYY'), TO_DATE('05/02/2019', 'DD/MM/YYYY'))
+  3  INTO Task(name, startDate, targetDate, comDate) values('taskB', TO_DATE('09/12/2013', 'DD/MM/YYYY'), TO_DATE('03/01/2018', 'DD/MM/YYYY'), TO_DATE('05/02/2020', 'DD/MM/YYYY'))
+  4  INTO Task(name, startDate, targetDate, comDate) values('taskC', TO_DATE('09/12/2004', 'DD/MM/YYYY'), TO_DATE('03/07/2007', 'DD/MM/YYYY'), TO_DATE('05/02/2016', 'DD/MM/YYYY'))
+  5  INTO Task(name, startDate, targetDate, comDate) values('taskD', TO_DATE('09/12/2012', 'DD/MM/YYYY'), TO_DATE('03/04/2019', 'DD/MM/YYYY'), TO_DATE('05/02/2013', 'DD/MM/YYYY'))
+  6  SELECT * FROM dual;
+
+4 rows created.
+
+SQL> 
+SQL> INSERT ALL
+  2  INTO Language(name, comInter, exaSuite) values('C++', 'c', 'sdfd')
+  3  INTO Language(name, comInter, exaSuite) values('Java', 'i', 'fdsf')
+  4  INTO Language(name, comInter, exaSuite) values('C', 'c', 'sdfd')
+  5  INTO Language(name, comInter, exaSuite) values('R', 'c', 'fsdaf')
+  6  SELECT * FROM dual;
+
+4 rows created.
+
+SQL> 
+SQL> INSERT ALL
+  2  INTO Programmer(ID, first, last, gender, salary, DOB, title, taskName, superID) values(4324, 'Victor', 'Gutierrez', 'm', 132242, TO_DATE('15/02/1996', 'DD/MM/YYYY'), 'Programmer', 'taskB', 4324)
+  3  INTO Programmer(ID, last, first, gender, salary, DOB, title, taskName, superID) values(4624, 'Vgfd', 'Gtreez', 'm', 92242, TO_DATE('05/09/1989', 'DD/MM/YYYY'), 'Programmer', 'taskA', 4324)
+  4  INTO Programmer(ID, last, first, gender, salary, DOB, title, taskName, superID) values(6455, 'Ghdfg', 'tertr', 'f', 73242, TO_DATE('15/03/1956', 'DD/MM/YYYY'), 'Programmer', 'taskB', 4324)
+  5  INTO Programmer(ID, last, first, gender, salary, DOB, title, taskName, superID) values(2344, 'retwt', 'jgdjdgfh', 'm', 12242, TO_DATE('12/12/1976', 'DD/MM/YYYY'), 'Programmer', 'taskB', 4324)
+  6  INTO Programmer(ID, last, first, gender, salary, DOB, title, taskName, superID) values(8724, 'gdfssd', 'fsdrez', 'f', 132242, TO_DATE('02/11/1986', 'DD/MM/YYYY'), 'Programmer', 'taskA', 8724)
+  7  SELECT * FROM dual;
+
+5 rows created.
+
+SQL> 
+SQL> INSERT ALL
+  2  INTO ProFinishedT(programmerID, taskName) values(2344, 'taskD')
+  3  INTO ProFinishedT(programmerID, taskName) values(4324, 'taskD')
+  4  INTO ProFinishedT(programmerID, taskName) values(8724, 'taskC')
+  5  INTO ProFinishedT(programmerID, taskName) values(6455, 'taskC')
+  6  SELECT * FROM dual;
+
+4 rows created.
+
+SQL> 
+SQL> INSERT ALL
+  2  INTO LanPro(languageName, programmerID, learnedDate) values('C++', 4324, TO_DATE('05/02/2007', 'DD/MM/YYYY'))
+  3  INTO LanPro(languageName, programmerID, learnedDate) values('Java', 4324, TO_DATE('05/02/2010', 'DD/MM/YYYY'))
+  4  INTO LanPro(languageName, programmerID, learnedDate) values('C', 4324, TO_DATE('05/02/2012', 'DD/MM/YYYY'))
+  5  INTO LanPro(languageName, programmerID, learnedDate) values('R', 2344, TO_DATE('05/02/2013', 'DD/MM/YYYY'))
+  6  INTO LanPro(languageName, programmerID, learnedDate) values('C', 6455, TO_DATE('05/02/2014', 'DD/MM/YYYY'))
+  7  INTO LanPro(languageName, programmerID, learnedDate) values('C', 8724, TO_DATE('05/02/2011', 'DD/MM/YYYY'))
+  8  SELECT * FROM dual;
+
+6 rows created.
+
+SQL> 
+SQL> INSERT ALL
+  2  INTO FinishedTask(taskName, dWorked) values('taskC', 200)
+  3  INTO FinishedTask(taskName, dWorked) values('taskD', 100)
+  4  SELECT * FROM dual;
+
+2 rows created.
+
+SQL> 
+SQL> INSERT ALL
+  2  INTO LanTask(languageName, taskName) values('R', 'taskA')
+  3  INTO LanTask(languageName, taskName) values('C++', 'taskB')
+  4  INTO LanTask(languageName, taskName) values('Java', 'taskB')
+  5  INTO LanTask(languageName, taskName) values('C', 'taskC')
+  6  INTO LanTask(languageName, taskName) values('C', 'taskD')
+  7  INTO LanTask(languageName, taskName) values('C++', 'taskD')
+  8  SELECT * FROM dual;
+
+6 rows created.
+
+SQL> 
+SQL> -----------------------------------------------------------------------
+SQL> -- Queries ->
+SQL> -----------------------------------------------------------------------
+SQL> 
+SQL> --Q-1
+SQL> SELECT name, comDate, trunc(months_between(T.comDate, SYSDATE)) monthsLeft
+  2  FROM Task T
+  3  WHERE current_timestamp < T.comDate
+  4  ORDER BY monthsLeft ASC;
+
+NAME                 COMDATE   MONTHSLEFT                                       
+-------------------- --------- ----------                                       
+taskA                05-FEB-19          9                                       
+taskB                05-FEB-20         21                                       
+
+SQL> 
+SQL> --Q-2
+SQL> SELECT ID, first, last
+  2  FROM Programmer P
+  3  WHERE taskName IN (
+  4  	     SELECT T.name
+  5  	     FROM TASK T
+  6  	     WHERE targetDate
+  7  		     BETWEEN to_date ('20180101','YYYYMMDD')
+  8  			     AND to_date ('20181231', 'YYYYMMDD')
+  9  )
+ 10  ORDER BY ID ASC;
+
+        ID FIRST                LAST                                            
+---------- -------------------- --------------------                            
+      2344 jgdjdgfh             retwt                                           
+      4324 Victor               Gutierrez                                       
+      6455 tertr                Ghdfg                                           
+
+SQL> 
+SQL> --Q-3
+SQL> SELECT LP.languageName, P.first, P.last, LP.learnedDate
+  2  FROM LanPro LP, Programmer P
+  3  WHERE LP.learnedDate IN (
+  4  	     SELECT DISTINCT MIN(LP2.learnedDate)
+  5  	     FROM LanPro LP2
+  6  	     WHERE LP2.languageName IN (
+  7  		     SELECT DISTINCT languageName
+  8  		     FROM LanTask LT
+  9  		     WHERE taskName IN (
+ 10  			     SELECT name
+ 11  			     FROM Task T
+ 12  			     WHERE current_timestamp < T.comDate))
+ 13  	     ) AND LP.programmerID = P.ID;
+
+LANGUAGENAME         FIRST                LAST                 LEARNEDDA        
+-------------------- -------------------- -------------------- ---------        
+C++                  Victor               Gutierrez            05-FEB-07        
+
+SQL> 
+SQL> --Q-4
+SQL> SELECT ID, first, last
+  2  FROM Programmer P
+  3  WHERE P.ID != P.superID AND EXISTS (
+  4  	     SELECT * FROM LanPro LP
+  5  	     WHERE P.ID = LP.programmerID AND EXISTS (
+  6  		     SELECT * FROM LanPro LP2
+  7  		     WHERE P.superID = LP2.programmerID
+  8  			     AND LP.languageName = LP2.languageName
+  9  	     )
+ 10  );
+
+        ID FIRST                LAST                                            
+---------- -------------------- --------------------                            
+      6455 tertr                Ghdfg                                           
+
+SQL> 
+SQL> spool off;
